@@ -2,3 +2,4 @@ tensorflow
 tensorflow_hub
 matplotlib
 pillow
+numpy
