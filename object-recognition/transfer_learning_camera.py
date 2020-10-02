@@ -1,7 +1,10 @@
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
+import PIL.Image as Image
+from picamera import PiCamera
 
+camera = PiCamera()
 classifier_model ="https://tfhub.dev/google/tf2-preview/mobilenet_v2/classification/4"
 IMAGE_SHAPE = (224, 224)
 
@@ -9,7 +12,8 @@ classifier = tf.keras.Sequential([
     hub.KerasLayer(classifier_model, input_shape=IMAGE_SHAPE+(3,))
 ])
 
-sample_img = tf.keras.utils.get_file('image.jpg','https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg')
+camera.capture('image.jpg')
+sample_img = 'image.jpg'
 sample_img = Image.open(sample_img).resize(IMAGE_SHAPE)
 sample_img = np.array(sample_img)/255.0
 
