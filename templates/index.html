@@ -1,9 +1,18 @@
 <html>
-  <head>
-    <title>Pi Video Surveillance</title>
-  </head>
-  <body>
-    <h1>Pi Video Surveillance</h1>
+    <head><title>Web Page Controlled Robot</title></head>
+    <body>
+    <h1> Web Page to Control Robot</h2>
+    <h2>Pi Video Surveillance</h1>
     <img src="{{ url_for('video_feed') }}">
-  </body>
+        <form method="POST" action="test">
+            <h3> Select a direction </h3>
+            <input type="submit" name="forward" value="forward">
+            <input type="submit" name="backward" value="backward">
+            <input type="submit" name="left" value="left">
+            <input type="submit" name="right" value="right">
+            
+            
+        </form>
+    </body>
 </html>
+
