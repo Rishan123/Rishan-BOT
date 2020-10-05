@@ -120,6 +120,7 @@ def main():
         bwd = request.form.get('backward')
         lt = request.form.get('left')
         rt = request.form.get('right')
+        auto = request.form.get('autonomous')
         if fwd == "forward":
             print('fwd')
             robot.forward()
@@ -140,6 +141,9 @@ def main():
             robot.right()
             time.sleep(1)
             robot.stop()
+        elif auto == "autonomous":
+            print('auto')
+
 
     return render_template("index.html")
             

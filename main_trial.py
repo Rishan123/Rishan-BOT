@@ -9,23 +9,25 @@ import cv2
 from gpiozero import Robot 
 import time
 import datetime
-from autonomous import robot
+import autonomous
+import sys
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
 # are viewing tthe stream)
 outputFrame = None
 lock = threading.Lock()
 
+robot = autonomous.create_robot()
 # initialize a flask object
 app = Flask(__name__)
 
-bot = Robot(left=(18,3), right=(15,14))
-bot.stop()
 # initialize the video stream and allow the camera sensor to
 # warmup
 vs = VideoStream(usePiCamera=1).start()
 #vs = VideoStream(src=0).start()
 time.sleep(2.0)
+fast = 1
+slow = 0.5
 
 @app.route("/")
 def index():
@@ -123,29 +125,38 @@ def main():
         auto = request.form.get('autonomous')
         if fwd == "forward":
             print('fwd')
-            bot.forward()
+            autonomous.go_forwards(fast,robot)
             time.sleep(1)
-            bot.stop()
+            autonomous.stop(robot)
         elif bwd == "backward":
             print('bwd')
-            bot.backward()
+            autonomous.go_backwards(fast,robot)
             time.sleep(1)
-            bot.stop()
+            autonomous.stop(robot)
         elif lt == "left":
             print('lt')
-            bot.left()
+            autonomous.go_left(fast,robot)
             time.sleep(1)
-            bot.stop()
+            autonomous.stop(robot)
         elif rt == "right":
             print('rt')
-            bot.right()
+            autonomous.go_right(robot)
             time.sleep(1)
-            bot.stop()
+            autonomous.stop(robot)
         elif auto == "autonomous":
-            print('auto')
+            while auto == "autonomous":
+                autonomous.auto(0,robot)
+                fwd = request.form.get('forward')
+                bwd = request.form.get('backward')
+                lt = request.form.get('left')
+                rt = request.form.get('right')
+                auto = request.form.get('autonomous')
+                if auto != "autonomous":
+                    print(auto)
+                    autonomous.stop(robot)
+                    sys.exit(0)
 
-
-
+                
     return render_template("index.html")
             
 # check to see if this is the main thread of execution
