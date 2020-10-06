@@ -28,6 +28,8 @@ vs = VideoStream(usePiCamera=1).start()
 time.sleep(2.0)
 fast = 1
 slow = 0.5
+global kill
+kill = True
 
 @app.route("/")
 def index():
@@ -115,7 +117,7 @@ def video_feed():
     return Response(generate(),
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-@app.route("/test", methods=["POST","GET"])
+@app.route("/robot", methods=["POST","GET"])
 def main():
     if request.method == 'POST':
         fwd = request.form.get('forward')
@@ -123,6 +125,11 @@ def main():
         lt = request.form.get('left')
         rt = request.form.get('right')
         auto = request.form.get('autonomous')
+        stop = request.form.get('stop')
+        print("===================")
+        print(fwd, bwd,lt, rt, auto, stop)
+        print("===================")
+        
         if fwd == "forward":
             print('fwd')
             autonomous.go_forwards(fast,robot)
@@ -140,22 +147,21 @@ def main():
             autonomous.stop(robot)
         elif rt == "right":
             print('rt')
-            autonomous.go_right(robot)
+            autonomous.go_right(fast,robot)
             time.sleep(1)
             autonomous.stop(robot)
         elif auto == "autonomous":
-            while auto == "autonomous":
+            kill = False
+            auto = request.form.get('autonomous')
+            while auto == "autonomous" and kill == False:
+                print('in while loop')
+                print(auto,kill)
                 autonomous.auto(0,robot)
-                fwd = request.form.get('forward')
-                bwd = request.form.get('backward')
-                lt = request.form.get('left')
-                rt = request.form.get('right')
-                auto = request.form.get('autonomous')
-                if auto != "autonomous":
-                    print(auto)
-                    autonomous.stop(robot)
-                    sys.exit(0)
-
+                time.sleep(1)
+        elif stop == "stop":
+            autonomous.stop(robot)
+            kill = True
+            print("stop", kill)
                 
     return render_template("index.html")
             
