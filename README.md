@@ -8,3 +8,4 @@ I recommend checking out the Tensorflow web page. Some of the code will be from 
 
 ``` sudo pip3 install -r requirements.txt ```
 
+This project has been completed.
